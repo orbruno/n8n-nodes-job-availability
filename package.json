@@ -17,6 +17,9 @@
 		"node": ">=22.22.0"
 	},
 	"packageManager": "npm@11.6.2",
+	"publishConfig": {
+		"access": "public"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/orbruno/n8n-nodes-job-availability.git"
