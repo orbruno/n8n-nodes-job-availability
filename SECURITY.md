@@ -6,7 +6,7 @@ Version 0.1.x is a local release candidate. No public package version is support
 
 ## Reporting
 
-Report a suspected vulnerability privately to the package owner. Do not include service tokens, source URLs, page content, workflow payloads, or personal data in the report. Include a minimal synthetic reproduction, affected version, and observed impact.
+Use the repository's **Security** tab and select **Report a vulnerability** to send a private report. Do not open a public issue for an unpatched vulnerability. Do not include service tokens, source URLs, page content, workflow payloads, or personal data in the report. Include a minimal synthetic reproduction, affected version, and observed impact.
 
 ## Security boundary
 
