@@ -9,10 +9,10 @@ This roadmap describes the public release path for `n8n-nodes-job-availability`.
 - Validate linting, type safety, builds, tests, package contents, and local scanner rules on supported Node.js versions.
 - Confirm package loading and isolated workflow behavior across the documented n8n compatibility range.
 - Provide contribution, security, operational, and release documentation.
+- Publish the companion [Job Availability API](https://github.com/orbruno/job-availability-api) with private self-hosting and n8n connectivity instructions.
 
 ## 0.1.x self-hosted npm preview — planned
 
-- Distribute or document deployment of the required companion Job Availability service.
 - Complete sustained shadow validation against representative workloads.
 - Publish the package from GitHub Actions with npm provenance.
 - Install the exact published version in a fresh self-hosted n8n environment and repeat the end-to-end smoke tests.
@@ -27,7 +27,7 @@ The npm preview will target self-hosted n8n. Publication will not imply n8n veri
 - Confirm that users can deploy a compatible service endpoint reachable from their n8n environment.
 - Submit the package through the n8n Creator Portal and address review findings.
 
-Verification depends on the companion service distribution and the requirements in force when the package is submitted.
+Verification depends on a compatible service deployment model and the requirements in force when the package is submitted.
 
 ## Later improvements
 

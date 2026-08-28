@@ -2,7 +2,7 @@
 
 ## Service boundary
 
-The node is a declarative client for one self-hosted Job Availability service. The service listens on configurable port 5002 by project convention and exposes JSON under `/v1`. The node supplies `Authorization: Bearer <service-token>` through its credential definition. Every POST supplies `Idempotency-Key`.
+The node is a declarative client for one self-hosted [Job Availability API](https://github.com/orbruno/job-availability-api). The service listens on configurable port 5002 by project convention and exposes JSON under `/v1`. The node supplies `Authorization: Bearer <service-token>` through its credential definition. Every POST supplies `Idempotency-Key`.
 
 When the runtime exposes `$execution.id` to declarative request defaults, the node also supplies `X-N8N-Execution-Id` for privacy-safe request correlation. n8n 2.0.0 omits this optional header; n8n 2.23.2 and 2.36.7 include it. Service-side logs and problem responses must remain correlatable when it is absent.
 

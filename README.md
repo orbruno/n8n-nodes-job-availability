@@ -19,7 +19,7 @@ The package has no runtime dependencies. Its only peer dependency is `n8n-workfl
 
 This public source repository does not by itself make the node installable from n8n's Community Nodes screen. That requires a separately approved public npm release. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
 
-The companion Job Availability service is required and is not distributed by this repository. Until a compatible service distribution is public, this repository supports source review and controlled self-hosted evaluation rather than a complete community installation. A loopback service is reachable from self-hosted n8n on the same machine or Docker network; it is not reachable from n8n Cloud.
+The companion [Job Availability API](https://github.com/orbruno/job-availability-api) is distributed separately and can be self-hosted on a private machine or Docker network. The node and API repositories together support a complete controlled self-hosted evaluation. A loopback or private-network service is not reachable from n8n Cloud.
 
 ## Installation from source
 
@@ -30,6 +30,8 @@ npm ci
 npm run validate
 npm pack
 ```
+
+Deploy the companion API by following its [private self-hosting instructions](https://github.com/orbruno/job-availability-api#quick-start-with-docker-compose) before testing the node credential.
 
 Install the generated tarball in the `nodes` directory below the self-hosted n8n user folder, then restart n8n. This private package is not installed from the public community-node catalog.
 
