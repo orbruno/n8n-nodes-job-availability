@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import aiToolWorkflowDocument from '../examples/job-availability-ai-tool.json';
 import dailyWorkflowDocument from '../examples/job-availability-daily.json';
 import observeWorkflowDocument from '../examples/job-availability-observe.json';
 
@@ -13,20 +14,22 @@ type Workflow = {
 	name: string;
 	active: boolean;
 	nodes: WorkflowNode[];
-	connections: Record<string, { main: Array<Array<{ node: string }>> }>;
+	connections: Record<string, Record<string, Array<Array<{ node: string }>>>>;
 };
 
 function loadWorkflow(name: string): Workflow {
-	return (name === 'job-availability-observe.json'
-		? observeWorkflowDocument
-		: dailyWorkflowDocument) as Workflow;
+	if (name === 'job-availability-observe.json') return observeWorkflowDocument as Workflow;
+	if (name === 'job-availability-ai-tool.json') return aiToolWorkflowDocument as Workflow;
+	return dailyWorkflowDocument as Workflow;
 }
 
 function assertConnectionTargetsExist(workflow: Workflow): void {
 	const names = new Set(workflow.nodes.map((node) => node.name));
 	for (const outputs of Object.values(workflow.connections)) {
-		for (const channel of outputs.main) {
-			for (const connection of channel) expect(names.has(connection.node)).toBe(true);
+		for (const channels of Object.values(outputs)) {
+			for (const channel of channels) {
+				for (const connection of channel) expect(names.has(connection.node)).toBe(true);
+			}
 		}
 	}
 }
@@ -46,6 +49,30 @@ describe('example workflows', () => {
 			},
 		});
 		expect(observe?.parameters.url).toMatch(/\.invalid\//u);
+		expect(workflow.nodes.every((node) => node.credentials === undefined)).toBe(true);
+		assertConnectionTargetsExist(workflow);
+	});
+
+	it('ships an inactive posting-observation tool with fixed authority boundaries', () => {
+		const workflow = loadWorkflow('job-availability-ai-tool.json');
+		const tool = workflow.nodes.find((node) => node.name === 'Observe Public Posting');
+
+		expect(workflow.active).toBe(false);
+		expect(tool).toMatchObject({
+			type: 'n8n-nodes-job-availability.jobAvailabilityTool',
+			parameters: {
+				resource: 'posting',
+				operation: 'observe',
+				platform: 'Public Job Board',
+				idempotencyKey: "={{$execution.id + ':ai-tool-observe'}}",
+			},
+		});
+		expect(tool?.parameters.url).toContain("$fromAI('url'");
+		expect(tool?.parameters.expectedTitle).toContain("$fromAI('expected_title'");
+		expect(tool?.parameters.expectedCompany).toContain("$fromAI('expected_company'");
+		expect(tool?.parameters.idempotencyKey).not.toContain('$fromAI');
+		expect(workflow.connections['Observe Public Posting'].ai_tool[0]?.[0]?.node).toBe('AI Agent');
+		expect(workflow.connections['Chat Model'].ai_languageModel[0]?.[0]?.node).toBe('AI Agent');
 		expect(workflow.nodes.every((node) => node.credentials === undefined)).toBe(true);
 		assertConnectionTargetsExist(workflow);
 	});
@@ -87,7 +114,11 @@ describe('example workflows', () => {
 		assertConnectionTargetsExist(workflow);
 	});
 
-	it.each(['job-availability-observe.json', 'job-availability-daily.json'])(
+	it.each([
+		'job-availability-observe.json',
+		'job-availability-daily.json',
+		'job-availability-ai-tool.json',
+	])(
 		'contains no embedded bearer secret in %s',
 		(name) => {
 			expect(JSON.stringify(loadWorkflow(name))).not.toMatch(/Bearer\s+[A-Za-z0-9_-]{32,}/u);

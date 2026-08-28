@@ -15,7 +15,7 @@ export class JobAvailability implements INodeType {
 		defaults: {
 			name: 'Job Availability',
 		},
-		usableAsTool: false as never,
+		usableAsTool: true as never,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'jobAvailabilityApi', required: true }],

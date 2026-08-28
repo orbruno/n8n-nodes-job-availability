@@ -8,6 +8,12 @@ When the runtime exposes `$execution.id` to declarative request defaults, the no
 
 The node does not classify postings, persist state, resolve network addresses, or schedule work. Those responsibilities belong to the service or workflow.
 
+## AI Agent tool boundary
+
+n8n may synthesize a `Job Availability Tool` from the same declarative node. In an agent workflow, the workflow author must select and fix the resource and operation before execution. Use `$fromAI()` only for the minimum action inputs and keep credentials, the service origin, and the idempotency key outside model control.
+
+Posting / Observe is the recommended demonstration action: it performs a bounded public-URL observation without creating a canonical product job. Durable run creation, job checks, finalization, and cancellation can change service state and require explicit human review before they are enabled as agent actions. The service continues to enforce bearer authentication, public-network restrictions, idempotency, request bounds, and state transitions regardless of whether n8n invokes the node through a main connection or an AI-tool connection.
+
 ## Route map
 
 - Credential test: `GET /v1/credentials/test`
@@ -84,6 +90,6 @@ To roll back the node integration, deactivate the copied workflow, route it back
 
 ## Package verification
 
-Run `npm run validate` before creating a tarball. `npm run scanner:local` applies scanner 0.33.0 rules to the source patterns and compiled distribution. `npm run package:inspect` executes a JSON dry-run pack and rejects source, tests, context files, CI files, locks, or other unexpected content. `npm run scanner:assert -- <result.json>` asserts the semantic `passed` field of a separately captured exact-version publication scan. The complete provenance scan requires a published exact version and remains a later release gate.
+Run `npm run validate` before creating a tarball. `npm run scanner:local` applies scanner 0.33.0 rules to the source patterns and compiled distribution. `npm run package:inspect` executes a JSON dry-run pack and rejects source, tests, context files, CI files, locks, or other unexpected content. `npm run scanner:assert -- <result.json>` asserts the semantic `passed` field of a separately captured exact-version publication scan. That provenance scan runs after the exact version is available from the registry and is recorded with the external release evidence.
 
-The API v1 contract fixture under `test/fixtures/` records upstream OpenAPI, public-schema, fixture-manifest, and fixture-corpus hashes. It also fixes all nine API operations, request bounds, bounded response fields, and problem semantics used by the node tests.
+The API v1 contract fixture under `test/fixtures/` records upstream OpenAPI, public-schema, fixture-manifest, and fixture-corpus hashes. It also fixes all nine API operations, request bounds, bounded response fields, and problem semantics used by the node tests. The AI-tool example test additionally fixes Posting / Observe and the workflow-derived idempotency key while allowing only posting details to use `$fromAI()`.

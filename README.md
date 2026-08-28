@@ -6,7 +6,7 @@
 
 `n8n-nodes-job-availability` is a declarative community node for a self-hosted Job Availability service. It observes public job postings and manages durable availability runs while keeping schedules, loops, branching, retries, recovery, and notifications visible in the workflow.
 
-Maturity: version 0.1.1 self-hosted npm preview. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. It is not verified by n8n, available on n8n Cloud, or approved for canonical product cutover.
+Maturity: version 0.2.0 self-hosted npm preview. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. Creator Portal review is a separate gate, so the package must not be described as verified, available on n8n Cloud, or approved for canonical product cutover until those gates are complete.
 
 See the [public roadmap](ROADMAP.md) for release gates and planned availability. Changes are recorded in the [changelog](CHANGELOG.md); contribution and security procedures are documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
@@ -18,7 +18,7 @@ The package has no runtime dependencies. Its only peer dependency is `n8n-workfl
 
 ## Community availability
 
-Version 0.1.1 is distributed through the public npm registry for unverified, self-hosted n8n use. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
+Version 0.2.0 is distributed through the public npm registry for unverified, self-hosted n8n use. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
 
 The companion [Job Availability API](https://github.com/orbruno/job-availability-api) is distributed separately and can be self-hosted on a private machine or Docker network. The node and API repositories together support a complete controlled self-hosted evaluation. A loopback or private-network service is not reachable from n8n Cloud.
 
@@ -80,6 +80,18 @@ Job:
 
 Observe, Create, and Create Scheduled send contract `schema_version: 1`. Every POST, including stateless Observe, requires an idempotency key. Use stable keys within a workflow execution and distinct keys for distinct operations or job IDs. When the n8n runtime exposes `$execution.id` to declarative request defaults, the node sends it as the privacy-safe `X-N8N-Execution-Id` correlation header. n8n 2.0.0 omits this optional header; n8n 2.23.2 and 2.36.7 include it. The service must create usable correlation independently and must not depend on this header.
 
+## Use as an AI Agent tool
+
+The node can be connected to an n8n AI Agent as an app tool. The workflow author remains responsible for the authority boundary:
+
+- Fix **Resource** and **Operation** in the tool configuration; do not let a prompt choose them.
+- Delegate only the fields the model needs for that action. Never delegate the Base URL, service token, or idempotency key.
+- Use a workflow-derived idempotency key such as `{{$execution.id + ':ai-tool-observe'}}`.
+- Prefer **Posting > Observe** for demonstrations because it performs one bounded observation without creating a canonical product job.
+- Require human review before enabling durable mutations such as run creation, checks, finalization, or cancellation in an agent-driven workflow.
+
+The service remains the enforceable authentication, network, idempotency, and state boundary. Tool use does not give the model direct access to the service token or add any node-side filesystem, environment, or subprocess capability.
+
 ## Output, limits, and privacy
 
 The node returns the service JSON response without local classification or persistence logic. The service bounds exposed source evidence to 20 entries and the five fields `platform`, `outcome`, `evidence_code`, `checked_at`, and `http_status`, plus `sources_truncated`.
@@ -96,8 +108,9 @@ An inconclusive posting result is a successful domain response, not an API failu
 
 - [Manual posting observation](examples/job-availability-observe.json)
 - [Daily durable availability run](examples/job-availability-daily.json)
+- [AI Agent posting observation tool](examples/job-availability-ai-tool.json)
 
-Both workflows contain synthetic values and no credential secret. The daily workflow refreshes the bounded RunDTO after each pending-ID window until no jobs remain, so a single scheduled run can cover the full service-owned inventory without exposing an inventory-list operation. Import the examples, select a local credential, and keep them inactive until the service configuration is verified.
+All workflows contain synthetic values or delegated placeholders and no credential secret. The daily workflow refreshes the bounded RunDTO after each pending-ID window until no jobs remain, so a single scheduled run can cover the full service-owned inventory without exposing an inventory-list operation. The agent example fixes Posting > Observe and its idempotency key while delegating only the posting details. Import the examples, select local credentials, and keep them inactive until the service configuration is verified.
 
 ## Development
 

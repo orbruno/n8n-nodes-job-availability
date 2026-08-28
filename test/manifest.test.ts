@@ -18,9 +18,9 @@ describe('package manifest and metadata', () => {
 		expect(manifest.peerDependencies).toEqual({ 'n8n-workflow': '*' });
 	});
 
-	it('keeps the combined surface unavailable as a tool', () => {
+	it('exposes the declarative surface through n8n app tools', () => {
 		const node = new JobAvailability();
-		expect(node.description.usableAsTool).toBe(false);
+		expect(node.description.usableAsTool).toBe(true);
 		expect(node.description.inputs).toHaveLength(1);
 		expect(node.description.outputs).toHaveLength(1);
 		expect(Object.getOwnPropertyNames(Object.getPrototypeOf(node))).not.toContain('execute');

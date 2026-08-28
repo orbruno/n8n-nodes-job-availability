@@ -1,6 +1,6 @@
 # Security Evidence
 
-Evidence date: 2026-08-27. Tool runtime: Node.js 24.19.0 and npm 11.6.2.
+Evidence date: 2026-08-28. Tool runtime: Node.js 24.19.0 and npm 11.6.2.
 
 ## Runtime surface
 
@@ -11,7 +11,15 @@ Evidence date: 2026-08-27. Tool runtime: Node.js 24.19.0 and npm 11.6.2.
 - Scanner 0.33.0 local compiled-distribution analysis: passed.
 - Package tests reject custom execution, direct HTTP helpers, restricted imports, filesystem or environment access, dynamic execution, subprocess use, console output, and cleartext bearer values in runtime source.
 
-The complete scanner provenance result cannot exist before exact-version publication. Publication and provenance scanning remain separately approved release work.
+The local scanner results above are prepublication evidence. Every release must also pass an exact-version provenance scan after the registry publishes it; that result belongs to the external release record because it cannot be embedded in the package it evaluates.
+
+## AI-tool boundary
+
+- n8n synthesizes the tool variant from the same declarative route definitions; the package adds no custom execution method.
+- The shipped agent example fixes Posting / Observe and derives idempotency from the workflow execution.
+- The example delegates only public posting details and contains no credential reference or secret.
+- The companion service continues to enforce authentication, public-network restrictions, request bounds, idempotency, and state transitions.
+- Durable mutating tool operations require human review before workflow activation.
 
 ## Development-tool audit
 

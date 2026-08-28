@@ -1,0 +1,101 @@
+{
+  "name": "Job Availability - AI Agent Posting Observation",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "chat-trigger",
+      "name": "When Chat Message Received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [-320, 0]
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Use the Job Availability tool only when the user explicitly asks to observe a public job posting. Report the service outcome without treating an inconclusive observation as closed."
+        }
+      },
+      "id": "ai-agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "chat-model",
+      "name": "Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [-160, 240]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Observe one public job posting and return the Job Availability service outcome. Use only when the user explicitly requests an observation.",
+        "resource": "posting",
+        "operation": "observe",
+        "platform": "Public Job Board",
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('url', `Public HTTP or HTTPS job posting URL to observe`, 'string') }}",
+        "expectedTitle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('expected_title', `Expected title of the job posting`, 'string') }}",
+        "expectedCompany": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('expected_company', `Expected company name, or an empty string when unknown`, 'string') }}",
+        "idempotencyKey": "={{$execution.id + ':ai-tool-observe'}}"
+      },
+      "id": "observe-posting-tool",
+      "name": "Observe Public Posting",
+      "type": "n8n-nodes-job-availability.jobAvailabilityTool",
+      "typeVersion": 1,
+      "position": [160, 240]
+    }
+  ],
+  "connections": {
+    "When Chat Message Received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Observe Public Posting": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

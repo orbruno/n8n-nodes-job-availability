@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-job-availability",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "Declarative n8n integration for a self-hosted Job Availability service",
 	"license": "MIT",
 	"homepage": "https://github.com/orbruno/n8n-nodes-job-availability#readme",
@@ -47,6 +47,7 @@
 		"docs/security-evidence.md",
 		"docs/workflow-evidence.md",
 		"examples/job-availability-daily.json",
+		"examples/job-availability-ai-tool.json",
 		"examples/job-availability-observe.json"
 	],
 	"n8n": {

@@ -77,6 +77,7 @@ const expectedPaths = [
 	'docs/operations.md',
 	'docs/security-evidence.md',
 	'docs/workflow-evidence.md',
+	'examples/job-availability-ai-tool.json',
 	'examples/job-availability-observe.json',
 	'examples/job-availability-daily.json',
 ].sort();
