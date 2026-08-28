@@ -1,8 +1,13 @@
 # n8n-nodes-job-availability
 
+[![CI](https://github.com/orbruno/n8n-nodes-job-availability/actions/workflows/ci.yml/badge.svg)](https://github.com/orbruno/n8n-nodes-job-availability/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+
 `n8n-nodes-job-availability` is a declarative community node for a self-hosted Job Availability service. It observes public job postings and manages durable availability runs while keeping schedules, loops, branching, retries, recovery, and notifications visible in the workflow.
 
 Maturity: public-source release candidate for unverified self-hosted use. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. It is not published to npm, verified by n8n, available on n8n Cloud, or approved for canonical product cutover.
+
+See the [public roadmap](ROADMAP.md) for release gates and planned availability. Changes are recorded in the [changelog](CHANGELOG.md); contribution and security procedures are documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## Compatibility
 

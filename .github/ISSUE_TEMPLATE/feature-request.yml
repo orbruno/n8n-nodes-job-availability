@@ -1,0 +1,41 @@
+name: Feature request
+description: Propose an improvement grounded in a concrete workflow need
+title: '[Feature]: '
+labels:
+  - enhancement
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues and the public roadmap.
+          required: true
+        - label: The proposal contains no credentials, source content, workflow payloads, or personal data.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Workflow problem
+      description: Describe the user need and why existing operations do not address it.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe inputs, outputs, failure behavior, and the expected workflow experience.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Explain workarounds or existing n8n nodes you considered.
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Service and node boundaries
+      description: Explain whether the change belongs in the declarative node, companion service, or workflow.
+    validations:
+      required: true

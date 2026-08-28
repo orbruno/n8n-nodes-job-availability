@@ -1,0 +1,87 @@
+name: Bug report
+description: Report a reproducible problem with the node package
+title: '[Bug]: '
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Remove credentials, source content, workflow payloads, and personal data before submitting. Use the private security-reporting process for vulnerabilities.
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: This report contains no secrets or personal data.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version or commit
+      placeholder: 0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: n8n-version
+    attributes:
+      label: n8n version
+      placeholder: 2.36.7
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: 22.22.0
+    validations:
+      required: true
+  - type: input
+    id: service-version
+    attributes:
+      label: Job Availability service version
+      description: Provide a release or commit identifier without including the service URL or token.
+    validations:
+      required: true
+  - type: dropdown
+    id: operation
+    attributes:
+      label: Affected resource
+      options:
+        - Posting
+        - Availability Run
+        - Job
+        - Credential test
+        - Package installation or loading
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Use synthetic values and include the smallest reproducible workflow when practical.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include sanitized error codes and messages. Do not include tokens, URLs, page content, or personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Describe deployment topology, recent changes, or other relevant details.
