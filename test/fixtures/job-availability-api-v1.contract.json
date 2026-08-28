@@ -1,0 +1,218 @@
+{
+	"interface": "job-availability-api-v1-node-contract",
+	"contract_version": "1.0.0",
+	"source_provenance": {
+		"openapi_sha256": "0e4cb0aa002a4fd959c1c03fb7f6e134d62c3eb88bff07a8065a85fbcfde46ee",
+		"public_schema_sha256": "dded385139c13df12530c1e312105675af17fd3f82b01af2fba04ef93fe598b8",
+		"fixture_manifest_sha256": "96ac56414301388ae48464a1ff8acbebed9fcd7d40cf74c30035f710be0d9b70",
+		"fixture_corpus_sha256": "a2a1d23d653976525ea62bd761b2828ff85ec65a3f96cc8150a4c62343a5e868",
+		"fixture_case_count": 65
+	},
+	"credential_operation": {
+		"operation_id": "testCredentials",
+		"method": "GET",
+		"url": "/v1/credentials/test",
+		"response_schema": "CredentialTestResponse"
+	},
+	"node_operations": [
+		{
+			"id": "posting.observe",
+			"operation_id": "observePosting",
+			"resource": "posting",
+			"operation": "observe",
+			"method": "POST",
+			"url": "/v1/postings/observe",
+			"request_schema": "ObservePostingRequest",
+			"response_schema": "ObservePostingResponse",
+			"ui_fields": ["platform", "url", "expectedTitle", "expectedCompany", "idempotencyKey"],
+			"body_fields": ["schema_version", "platform", "url", "expected_title", "expected_company"]
+		},
+		{
+			"id": "availabilityRun.create",
+			"operation_id": "createAvailabilityRun",
+			"resource": "availabilityRun",
+			"operation": "create",
+			"method": "POST",
+			"url": "/v1/availability/runs",
+			"request_schema": "CreateRunRequest",
+			"response_schema": "Run",
+			"ui_fields": ["jobIds", "trigger", "idempotencyKey"],
+			"body_fields": ["schema_version", "job_ids", "trigger"]
+		},
+		{
+			"id": "availabilityRun.createScheduled",
+			"operation_id": "createScheduledAvailabilityRun",
+			"resource": "availabilityRun",
+			"operation": "createScheduled",
+			"method": "POST",
+			"url": "/v1/availability/runs/scheduled",
+			"request_schema": "CreateScheduledRunRequest",
+			"response_schema": "Run",
+			"ui_fields": ["idempotencyKey"],
+			"body_fields": ["schema_version"]
+		},
+		{
+			"id": "availabilityRun.get",
+			"operation_id": "getAvailabilityRun",
+			"resource": "availabilityRun",
+			"operation": "get",
+			"method": "GET",
+			"url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId)}}",
+			"request_schema": null,
+			"response_schema": "Run",
+			"ui_fields": ["runId"],
+			"body_fields": []
+		},
+		{
+			"id": "job.checkAvailability",
+			"operation_id": "checkJobAvailability",
+			"resource": "job",
+			"operation": "checkAvailability",
+			"method": "POST",
+			"url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/jobs/' + encodeURIComponent($parameter.jobId) + '/check'}}",
+			"request_schema": null,
+			"response_schema": "CheckJobResponse",
+			"ui_fields": ["runId", "jobId", "idempotencyKey"],
+			"body_fields": []
+		},
+		{
+			"id": "job.getAvailability",
+			"operation_id": "getJobAvailability",
+			"resource": "job",
+			"operation": "getAvailability",
+			"method": "GET",
+			"url": "={{'/v1/jobs/' + encodeURIComponent($parameter.jobId) + '/availability'}}",
+			"request_schema": null,
+			"response_schema": "JobAvailability",
+			"ui_fields": ["jobId"],
+			"body_fields": []
+		},
+		{
+			"id": "availabilityRun.finalize",
+			"operation_id": "finalizeAvailabilityRun",
+			"resource": "availabilityRun",
+			"operation": "finalize",
+			"method": "POST",
+			"url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/finalize'}}",
+			"request_schema": null,
+			"response_schema": "Run",
+			"ui_fields": ["runId", "idempotencyKey"],
+			"body_fields": []
+		},
+		{
+			"id": "availabilityRun.cancel",
+			"operation_id": "cancelAvailabilityRun",
+			"resource": "availabilityRun",
+			"operation": "cancel",
+			"method": "POST",
+			"url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/cancel'}}",
+			"request_schema": null,
+			"response_schema": "Run",
+			"ui_fields": ["runId", "idempotencyKey"],
+			"body_fields": []
+		}
+	],
+	"request_bounds": {
+		"job_id_max_utf8_bytes": 255,
+		"run_id_max_characters": 128,
+		"idempotency_key_max_characters": 128,
+		"job_ids_min_items": 1,
+		"job_ids_max_items": 100,
+		"scheduled_inventory_max_items": 1000,
+		"trigger_max_characters": 64,
+		"platform_max_characters": 64,
+		"url_max_characters": 2048,
+		"expected_title_max_characters": 300,
+		"expected_company_max_characters": 200
+	},
+	"response_contracts": {
+		"CredentialTestResponse": {
+			"fields": ["schema_version", "service_version", "ready"]
+		},
+		"ObservePostingResponse": {
+			"fields": ["schema_version", "service_version", "duration_ms", "observation"],
+			"source_evidence_fields": [
+				"platform",
+				"outcome",
+				"evidence_code",
+				"checked_at",
+				"http_status"
+			]
+		},
+		"Run": {
+			"fields": [
+				"schema_version",
+				"run_id",
+				"status",
+				"trigger",
+				"created_at",
+				"started_at",
+				"completed_at",
+				"job_count",
+				"pending_count",
+				"processed_count",
+				"error_count",
+				"summary",
+				"pending_job_ids",
+				"pending_job_ids_truncated",
+				"processed_job_ids",
+				"processed_job_ids_truncated",
+				"errors",
+				"errors_truncated"
+			],
+			"pending_job_ids_max_items": 100,
+			"processed_job_ids_max_items": 100,
+			"errors_max_items": 100
+		},
+		"CheckJobResponse": {
+			"fields": [
+				"schema_version",
+				"run_id",
+				"job_id",
+				"before",
+				"after",
+				"checked_at",
+				"sources",
+				"sources_truncated"
+			],
+			"sources_max_items": 20
+		},
+		"JobAvailability": {
+			"fields": [
+				"schema_version",
+				"job_id",
+				"status",
+				"last_checked_at",
+				"last_run_id",
+				"closure_run_ids",
+				"sources",
+				"sources_truncated"
+			],
+			"closure_run_ids_max_items": 2,
+			"sources_max_items": 20
+		},
+		"Problem": {
+			"fields": ["type", "title", "status", "detail", "instance", "code", "request_id"],
+			"detail_max_characters": 500,
+			"request_id_max_characters": 128
+		}
+	},
+	"problem_statuses": [400, 401, 404, 409, 413, 415, 429, 500, 503],
+	"problem_codes": [
+		"invalid_request",
+		"authentication_failed",
+		"not_found",
+		"payload_too_large",
+		"unsupported_media_type",
+		"idempotency_conflict",
+		"run_cancelled",
+		"run_has_pending_jobs",
+		"run_terminal",
+		"job_not_checkable",
+		"no_jobs_available",
+		"inventory_limit_exceeded",
+		"rate_limited",
+		"internal_error",
+		"service_unavailable"
+	]
+}

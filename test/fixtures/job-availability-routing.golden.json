@@ -1,0 +1,190 @@
+{
+  "interface": "job-availability-declarative-routing-golden",
+  "interface_version": "1.0.0",
+  "credential": {
+    "authentication": {
+      "type": "generic",
+      "headers": {
+        "Authorization": "=Bearer {{$credentials.serviceToken}}"
+      }
+    },
+    "test": {
+      "baseURL": "={{$credentials.baseUrl.endsWith(\"/\") ? $credentials.baseUrl.slice(0, -1) : $credentials.baseUrl}}",
+      "method": "GET",
+      "url": "/v1/credentials/test"
+    }
+  },
+  "request_defaults": {
+    "baseURL": "={{$credentials.baseUrl.endsWith(\"/\") ? $credentials.baseUrl.slice(0, -1) : $credentials.baseUrl}}",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "X-N8N-Execution-Id": "={{$execution.id}}"
+    }
+  },
+  "operations": [
+    {
+      "id": "availabilityRun.cancel",
+      "request": {
+        "body": null,
+        "method": "POST",
+        "url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/cancel'}}"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "availabilityRun.create",
+      "request": {
+        "body": {
+          "schema_version": 1
+        },
+        "method": "POST",
+        "url": "/v1/availability/runs"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        },
+        {
+          "parameter": "jobIds",
+          "send": {
+            "property": "job_ids",
+            "type": "body",
+            "value": "={{$value.map((entry) => entry.jobId)}}"
+          }
+        },
+        {
+          "parameter": "trigger",
+          "send": {
+            "property": "trigger",
+            "type": "body"
+          }
+        }
+      ]
+    },
+    {
+      "id": "availabilityRun.createScheduled",
+      "request": {
+        "body": {
+          "schema_version": 1
+        },
+        "method": "POST",
+        "url": "/v1/availability/runs/scheduled"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "availabilityRun.finalize",
+      "request": {
+        "body": null,
+        "method": "POST",
+        "url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/finalize'}}"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "availabilityRun.get",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId)}}"
+      },
+      "parameter_routing": []
+    },
+    {
+      "id": "job.checkAvailability",
+      "request": {
+        "body": null,
+        "method": "POST",
+        "url": "={{'/v1/availability/runs/' + encodeURIComponent($parameter.runId) + '/jobs/' + encodeURIComponent($parameter.jobId) + '/check'}}"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "job.getAvailability",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "url": "={{'/v1/jobs/' + encodeURIComponent($parameter.jobId) + '/availability'}}"
+      },
+      "parameter_routing": []
+    },
+    {
+      "id": "posting.observe",
+      "request": {
+        "body": {
+          "schema_version": 1
+        },
+        "method": "POST",
+        "url": "/v1/postings/observe"
+      },
+      "parameter_routing": [
+        {
+          "parameter": "expectedCompany",
+          "send": {
+            "property": "expected_company",
+            "type": "body"
+          }
+        },
+        {
+          "parameter": "expectedTitle",
+          "send": {
+            "property": "expected_title",
+            "type": "body"
+          }
+        },
+        {
+          "parameter": "idempotencyKey",
+          "request_headers": {
+            "Idempotency-Key": "={{$value}}"
+          }
+        },
+        {
+          "parameter": "platform",
+          "send": {
+            "property": "platform",
+            "type": "body"
+          }
+        },
+        {
+          "parameter": "url",
+          "send": {
+            "property": "url",
+            "type": "body"
+          }
+        }
+      ]
+    }
+  ]
+}

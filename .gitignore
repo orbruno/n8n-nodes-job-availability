@@ -1,0 +1,19 @@
+dist
+node_modules
+coverage
+.DS_Store
+
+# Local project context and planning records are not part of the public package source.
+.c*/
+.g*/
+!.github/
+AGENTS.md
+_Context__n8n-nodes-job-availability.md
+_Overview__n8n-nodes-job-availability.md
+PLAN--Job-Availability-Community-Node.md
+README--Planning-Baseline.md
+
+# Internal gate records are retained locally; public tests cover product behavior.
+docs/evidence/
+test/evidence-consistency.test.ts
+test/t5-evidence.test.ts

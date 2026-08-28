@@ -1,0 +1,259 @@
+{
+  "name": "Job Availability - Daily Durable Run",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 5 * * *"
+            }
+          ]
+        }
+      },
+      "id": "daily-schedule",
+      "name": "Daily 05:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-860, 0]
+    },
+    {
+      "parameters": {
+        "resource": "availabilityRun",
+        "operation": "createScheduled",
+        "idempotencyKey": "={{$execution.id + ':create-scheduled'}}"
+      },
+      "id": "create-scheduled-run",
+      "name": "Create Scheduled Run",
+      "type": "n8n-nodes-job-availability.jobAvailability",
+      "typeVersion": 1,
+      "position": [-620, 0],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "jsCode": "const run = $input.first().json;\nconst pendingIds = Array.isArray(run.pending_job_ids) ? run.pending_job_ids : [];\nreturn pendingIds.map((job_id) => ({ json: { run_id: run.run_id, job_id, reset_chunk: true } }));"
+      },
+      "id": "expand-jobs",
+      "name": "Expand Pending Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-380, 0]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": "={{$json.reset_chunk === true}}"
+        }
+      },
+      "id": "loop-jobs",
+      "name": "Loop Jobs",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-140, 0]
+    },
+    {
+      "parameters": {
+        "resource": "job",
+        "operation": "checkAvailability",
+        "runId": "={{$json.run_id}}",
+        "jobId": "={{$json.job_id}}",
+        "idempotencyKey": "={{$execution.id + ':check:' + $json.job_id}}"
+      },
+      "id": "check-job",
+      "name": "Check Job",
+      "type": "n8n-nodes-job-availability.jobAvailability",
+      "typeVersion": 1,
+      "position": [100, 120],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1500
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { run_id: $('Create Scheduled Run').first().json.run_id } }];"
+      },
+      "id": "prepare-run-refresh",
+      "name": "Prepare Run Refresh",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [100, -120]
+    },
+    {
+      "parameters": {
+        "resource": "availabilityRun",
+        "operation": "get",
+        "runId": "={{$json.run_id}}"
+      },
+      "id": "get-run",
+      "name": "Get Run",
+      "type": "n8n-nodes-job-availability.jobAvailability",
+      "typeVersion": 1,
+      "position": [340, -120],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "pending-count-positive",
+              "leftValue": "={{$json.pending_count}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "pending-jobs-remain",
+      "name": "Pending Jobs Remain",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [580, -120]
+    },
+    {
+      "parameters": {
+        "resource": "availabilityRun",
+        "operation": "finalize",
+        "runId": "={{$('Create Scheduled Run').first().json.run_id}}",
+        "idempotencyKey": "={{$execution.id + ':finalize:' + $('Create Scheduled Run').first().json.run_id}}"
+      },
+      "id": "finalize-run",
+      "name": "Finalize Run",
+      "type": "n8n-nodes-job-availability.jobAvailability",
+      "typeVersion": 1,
+      "position": [820, 0],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    }
+  ],
+  "connections": {
+    "Daily 05:00": {
+      "main": [
+        [
+          {
+            "node": "Create Scheduled Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Scheduled Run": {
+      "main": [
+        [
+          {
+            "node": "Expand Pending Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expand Pending Jobs": {
+      "main": [
+        [
+          {
+            "node": "Loop Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Jobs": {
+      "main": [
+        [
+          {
+            "node": "Prepare Run Refresh",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Job": {
+      "main": [
+        [
+          {
+            "node": "Loop Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Run Refresh": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Run": {
+      "main": [
+        [
+          {
+            "node": "Pending Jobs Remain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pending Jobs Remain": {
+      "main": [
+        [
+          {
+            "node": "Expand Pending Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Finalize Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin"
+  },
+  "pinData": {},
+  "tags": []
+}
