@@ -1,11 +1,12 @@
 # n8n-nodes-job-availability
 
 [![CI](https://github.com/orbruno/n8n-nodes-job-availability/actions/workflows/ci.yml/badge.svg)](https://github.com/orbruno/n8n-nodes-job-availability/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/n8n-nodes-job-availability.svg)](https://www.npmjs.com/package/n8n-nodes-job-availability)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
 `n8n-nodes-job-availability` is a declarative community node for a self-hosted Job Availability service. It observes public job postings and manages durable availability runs while keeping schedules, loops, branching, retries, recovery, and notifications visible in the workflow.
 
-Maturity: public-source release candidate for unverified self-hosted use. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. It is not published to npm, verified by n8n, available on n8n Cloud, or approved for canonical product cutover.
+Maturity: version 0.1.0 self-hosted npm preview. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. It is not verified by n8n, available on n8n Cloud, or approved for canonical product cutover.
 
 See the [public roadmap](ROADMAP.md) for release gates and planned availability. Changes are recorded in the [changelog](CHANGELOG.md); contribution and security procedures are documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
@@ -17,11 +18,21 @@ The package has no runtime dependencies. Its only peer dependency is `n8n-workfl
 
 ## Community availability
 
-This public source repository does not by itself make the node installable from n8n's Community Nodes screen. That requires a separately approved public npm release. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
+Version 0.1.0 is distributed through the public npm registry for unverified, self-hosted n8n use. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
 
 The companion [Job Availability API](https://github.com/orbruno/job-availability-api) is distributed separately and can be self-hosted on a private machine or Docker network. The node and API repositories together support a complete controlled self-hosted evaluation. A loopback or private-network service is not reachable from n8n Cloud.
 
-## Installation from source
+## Installation
+
+Deploy the companion API by following its [private self-hosting instructions](https://github.com/orbruno/job-availability-api#quick-start-with-docker-compose). Then, on a self-hosted n8n instance, open **Settings > Community Nodes**, select **Install**, and enter:
+
+```text
+n8n-nodes-job-availability
+```
+
+Restart n8n if your deployment does not reload community packages automatically.
+
+### From source
 
 Build and validate the package from a clean checkout:
 
@@ -31,9 +42,7 @@ npm run validate
 npm pack
 ```
 
-Deploy the companion API by following its [private self-hosting instructions](https://github.com/orbruno/job-availability-api#quick-start-with-docker-compose) before testing the node credential.
-
-Install the generated tarball in the `nodes` directory below the self-hosted n8n user folder, then restart n8n. This private package is not installed from the public community-node catalog.
+Install the generated tarball in the `nodes` directory below the self-hosted n8n user folder, then restart n8n.
 
 To uninstall, remove `n8n-nodes-job-availability` from that `nodes` directory, reinstall its remaining dependencies, and restart n8n. Uninstalling the node does not delete service-side availability data.
 

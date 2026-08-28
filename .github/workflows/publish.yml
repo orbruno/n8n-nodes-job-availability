@@ -33,7 +33,8 @@
 #      The exact trusted-publisher configuration then supplies short-lived OIDC
 #      credentials for later publications.
 #
-# Both paths use provenance. Publication remains disabled until separately approved.
+# Both paths use provenance. Publication requires an approved version tag and
+# configured authentication.
 #
 # ─── TAG CONVENTION ────────────────────────────────────────────────────────────
 #
