@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-job-availability",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Declarative n8n integration for a self-hosted Job Availability service",
 	"license": "MIT",
 	"homepage": "https://github.com/orbruno/n8n-nodes-job-availability#readme",
@@ -11,7 +11,7 @@
 	],
 	"author": {
 		"name": "Orlando Bruno",
-		"email": "47383585+orbruno@users.noreply.github.com"
+		"email": "orbruno@gmail.com"
 	},
 	"engines": {
 		"node": ">=22.22.0"
