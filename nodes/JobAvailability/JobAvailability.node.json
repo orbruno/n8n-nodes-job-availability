@@ -1,5 +1,5 @@
 {
-	"node": "n8n-nodes-job-availability",
+	"node": "n8n-nodes-job-availability.jobAvailability",
 	"nodeVersion": "1.0",
 	"categories": ["Data & Storage", "Productivity"],
 	"resources": {

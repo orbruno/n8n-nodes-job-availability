@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { JobAvailabilityApi } from '../credentials/JobAvailabilityApi.credentials';
 import { JobAvailability } from '../nodes/JobAvailability/JobAvailability.node';
+import nodeMetadataDocument from '../nodes/JobAvailability/JobAvailability.node.json';
 import manifestDocument from '../package.json';
 
+const nodeMetadata = nodeMetadataDocument as Record<string, unknown>;
 const manifest = manifestDocument as Record<string, unknown>;
 
 describe('package manifest and metadata', () => {
@@ -16,6 +18,12 @@ describe('package manifest and metadata', () => {
 		});
 		expect(manifest).not.toHaveProperty('dependencies');
 		expect(manifest.peerDependencies).toEqual({ 'n8n-workflow': '*' });
+	});
+
+	it('uses the fully qualified node identifier in metadata', () => {
+		const node = new JobAvailability();
+		expect(nodeMetadata.node).toBe(`${manifest.name}.${node.description.name}`);
+		expect(nodeMetadata.node).toBe('n8n-nodes-job-availability.jobAvailability');
 	});
 
 	it('exposes the declarative surface through n8n app tools', () => {

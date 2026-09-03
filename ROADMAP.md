@@ -17,23 +17,23 @@ This roadmap describes the public release path for `n8n-nodes-job-availability`.
 - Install the exact published version in a fresh self-hosted n8n environment and repeat the end-to-end smoke tests.
 - Document supported service versions, rollback, and upgrade procedures.
 
-The npm preview will target self-hosted n8n. Publication will not imply n8n verification or n8n Cloud availability.
+The npm preview targets self-hosted n8n. Publication does not imply n8n verification or n8n Cloud availability.
 
-## 0.2.0 AI-tool preview — in progress
+## 0.2.0 AI-tool preview — complete
 
 - Enable the node as an n8n app tool without adding custom execution code.
 - Ship a constrained Posting / Observe agent example and safety guidance.
 - Validate the exact published package in a fresh self-hosted n8n instance.
-- Record the uninterrupted Creator Portal capability demonstration against version 0.2.0.
 
-## n8n verification — conditional
+## 0.2.1 node-metadata correction — release approved
 
-- Recheck the current n8n community-node verification requirements against the released package.
-- Run the official scanner against the exact npm version.
-- Confirm that users can deploy a compatible service endpoint reachable from their n8n environment.
-- Submit the package through the n8n Creator Portal and address review findings.
+- Use the fully qualified `n8n-nodes-job-availability.jobAvailability` identifier in the node metadata file.
+- Protect the required identifier with a package-level regression test.
+- Publish the correction as a provenance-backed patch release.
 
-Verification depends on a compatible service deployment model and the requirements in force when the package is submitted.
+## n8n verification — changes requested
+
+Version 0.2.0 and its uninterrupted capability demonstration were submitted through the Creator Portal on 2026-08-30. On 2026-09-03, n8n requested the fully qualified node metadata identifier before approval. The correction is locally implemented and validated; patch publication and notification to the review team are the remaining actions. The package remains unverified until n8n explicitly accepts it.
 
 ## Later improvements
 

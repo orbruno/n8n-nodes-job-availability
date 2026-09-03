@@ -17,3 +17,6 @@ README--Planning-Baseline.md
 docs/evidence/
 test/evidence-consistency.test.ts
 test/t5-evidence.test.ts
+
+# Local production assets are intentionally excluded from the public repository.
+project-private/
