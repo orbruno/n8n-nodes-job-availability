@@ -31,9 +31,9 @@ The npm preview targets self-hosted n8n. Publication does not imply n8n verifica
 - Protect the required identifier with a package-level regression test.
 - Publish the correction as a provenance-backed patch release.
 
-## n8n verification — resubmitted; external review pending
+## n8n verification — complete
 
-Version 0.2.0 and its uninterrupted capability demonstration were submitted through the Creator Portal on 2026-08-30. On 2026-09-03, n8n requested the fully qualified node metadata identifier before approval. Version 0.2.1 contains the correction, passed the complete release workflow, and was published to npm with provenance from the tagged source commit. The review team was notified and the corrected package was resubmitted on 2026-09-03. External re-review is pending, and the package remains unverified until n8n explicitly accepts it.
+Version 0.2.0 and its uninterrupted capability demonstration were submitted through the Creator Portal on 2026-08-30. On 2026-09-03, n8n requested the fully qualified node metadata identifier before approval. Version 0.2.1 contains the correction, passed the complete release workflow, and was published to npm with provenance from the tagged source commit. The corrected package was resubmitted on 2026-09-03, and n8n approval was confirmed on 2026-09-05. The package is now a verified community node.
 
 ## Later improvements
 

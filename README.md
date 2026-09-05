@@ -6,7 +6,7 @@
 
 `n8n-nodes-job-availability` is a declarative community node for a self-hosted Job Availability service. It observes public job postings and manages durable availability runs while keeping schedules, loops, branching, retries, recovery, and notifications visible in the workflow.
 
-Maturity: version 0.2.1 self-hosted npm preview. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. Creator Portal review is a separate gate, so the package must not be described as verified, available on n8n Cloud, or approved for canonical product cutover until those gates are complete.
+Maturity: version 0.2.1 verified community node. Declarative routing, package checks, and isolated workflow integration pass in fresh n8n 2.0.0, 2.23.2, and 2.36.7 environments. n8n approval was confirmed on 2026-09-05. Canonical product cutover remains a separate internal gate.
 
 See the [public roadmap](ROADMAP.md) for release gates and planned availability. Changes are recorded in the [changelog](CHANGELOG.md); contribution and security procedures are documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
@@ -18,7 +18,7 @@ The package has no runtime dependencies. Its only peer dependency is `n8n-workfl
 
 ## Community availability
 
-Version 0.2.1 is distributed through the public npm registry for unverified, self-hosted n8n use. Discovery from the nodes panel and n8n Cloud installation additionally require review through the n8n Creator Portal.
+Version 0.2.1 is distributed through the public npm registry and approved by n8n as a verified community node. Availability in a given n8n instance can depend on the platform rollout and runtime compatibility.
 
 The companion [Job Availability API](https://github.com/orbruno/job-availability-api) is distributed separately and can be self-hosted on a private machine or Docker network. The node and API repositories together support a complete controlled self-hosted evaluation. A loopback or private-network service is not reachable from n8n Cloud.
 
